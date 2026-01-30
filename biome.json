@@ -6,11 +6,18 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": false
+		"ignoreUnknown": false,
+		"includes": [
+      "**",
+      "!client/src/routeTree.gen.ts",
+      "!client/src/components/ui/*",
+      "!**/generated",
+      "!!**/dist"
+    ]
 	},
 	"formatter": {
 		"enabled": true,
-		"indentStyle": "tab"
+		"indentStyle": "space"
 	},
 	"linter": {
 		"enabled": true,
@@ -30,5 +37,16 @@
 				"organizeImports": "on"
 			}
 		}
-	}
+	},
+	"html": {
+    "experimentalFullSupportEnabled": true,
+    "formatter": {
+      "indentScriptAndStyle": true
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  }
 }

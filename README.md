@@ -1,264 +1,116 @@
-# bhvr 🦫
+# Task Manager
 
-![cover](https://cdn.stevedylan.dev/ipfs/bafybeievx27ar5qfqyqyud7kemnb5n2p4rzt2matogi6qttwkpxonqhra4)
+A full-stack task management application built with Bun, Hono, React, and shared TypeScript types.
 
-A full-stack TypeScript monorepo starter with shared types, using Bun, Hono, Vite, and React.
+This project focuses on end-to-end application architecture using the BHVR stack, emphasizing shared types, clean API boundaries, authentication flows, and pragmatic UI state management.
 
-## Why bhvr?
+## Why this project
 
-While there are plenty of existing app building stacks out there, many of them are either bloated, outdated, or have too much of a vendor lock-in. bhvr is built with the opinion that you should be able to deploy your client or server in any environment while also keeping type safety.
+This project exists to demonstrate:
+
+- End-to-end type safety between client and server
+- Clean API design with predictable request/response flows
+- Practical authentication patterns
+- Shared domain models across frontend and backend
+- A modern full-stack setup without framework lock-in
+
+## Tech Stack
+
+- **Runtime:** Bun
+- **Backend:** Hono
+- **Frontend:** React + Vite
+- **Type Sharing:** Shared workspace package
+- **Monorepo Tooling:** Turbo
+
+This app is built on top of the BHVR stack, which provides a lightweight full-stack monorepo with shared types and flexible deployment options.
 
 ## Features
 
-- **Full-Stack TypeScript**: End-to-end type safety between client and server
-- **Shared Types**: Common type definitions shared between client and server
-- **Monorepo Structure**: Organized as a workspaces-based monorepo with Turbo for build orchestration
-- **Modern Stack**:
-  - [Bun](https://bun.sh) as the JavaScript runtime and package manager
-  - [Hono](https://hono.dev) as the backend framework
-  - [Vite](https://vitejs.dev) for frontend bundling
-  - [React](https://react.dev) for the frontend UI
-  - [Turbo](https://turbo.build) for monorepo build orchestration and caching
+- User authentication flow suitable for local development and demos
+- Task creation, completion, and deletion
+- Client-side state synchronized with backend APIs using explicit request/response flows
+- Shared task and user types across frontend and backend
+- Clear separation of API, UI, and shared domain logic
+
+## Screenshots
+
+![Task Manager – Tasks View](./docs/task-manager-tasks.png)
+![Task Manager – Login View](./docs/task-manager-login.png)
+
+## Status
+
+Core functionality is complete and stable.
+
+Planned follow-ups include:
+- Database-backed persistence
+- Production-grade authentication
+- Deployment configuration
+
+## Limitations & Design Notes
+
+This project is intentionally scoped for architectural clarity rather than production completeness:
+
+- **Authentication**
+  - Uses a simplified token-based flow suitable for demos and local development.
+  - Tokens are stored client-side and are not persisted across server restarts.
+  - No password hashing or OAuth flows are implemented in this version.
+
+- **Persistence**
+  - Tasks are stored in memory on the server.
+  - Data resets on server restart; no database is currently configured.
+  - Persistence is a planned follow-up to demonstrate database integration.
+
+- **Deployment**
+  - The app is structured for flexible deployment, but is currently intended to run locally.
+  - Client and server can be deployed independently once persistence is added.
+
+These constraints are deliberate to keep the focus on **type sharing, API boundaries, and full-stack structure** rather than infrastructure complexity.
+
+## What I’d Do Differently in Production
+
+If this application were being prepared for production use, I would make the following changes:
+
+- **Authentication**
+  - Replace the demo token flow with secure, hashed credentials and refresh-token rotation.
+  - Store auth tokens in HttpOnly cookies instead of localStorage.
+  - Add proper error handling, rate limiting, and account lockout protections.
+
+- **Persistence**
+  - Introduce a relational database (e.g. PostgreSQL or SQLite) for task and user data.
+  - Add migrations and explicit data access layers.
+  - Persist user sessions and task state across restarts.
+
+- **API & Security**
+  - Validate all request payloads using a schema validation layer.
+  - Harden headers and CORS configuration for production environments.
+  - Add structured logging and error monitoring.
+
+- **Frontend**
+  - Improve loading and error states for slower or unreliable networks.
+  - Add optimistic updates with rollback for a smoother UX.
+  - Improve accessibility auditing and keyboard flows across all views.
+
+- **Deployment**
+  - Deploy the API and client independently.
+  - Add environment-specific configuration and secrets management.
+  - Configure CI for linting, type-checking, and builds.
+
+These changes are intentionally deferred in this version to keep the project focused on **full-stack structure, type sharing, and API clarity** rather than infrastructure complexity.
 
 ## Project Structure
 
-```
-.
-├── client/               # React frontend
-├── server/               # Hono backend
-├── shared/               # Shared TypeScript definitions
-│   └── src/types/        # Type definitions used by both client and server
-├── package.json          # Root package.json with workspaces
-└── turbo.json            # Turbo configuration for build orchestration
-```
-
-### Server
-
-bhvr uses Hono as a backend API for its simplicity and massive ecosystem of plugins. If you have ever used Express then it might feel familiar. Declaring routes and returning data is easy.
-
-```
-server
-├── bun.lock
-├── package.json
-├── README.md
-├── src
-│   └── index.ts
-└── tsconfig.json
-```
-
-```typescript src/index.ts
-import { Hono } from 'hono'
-import { cors } from 'hono/cors'
-import type { ApiResponse } from 'shared/dist'
-
-const app = new Hono()
-
-app.use(cors())
-
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
-
-app.get('/hello', async (c) => {
-
-  const data: ApiResponse = {
-    message: "Hello BHVR!",
-    success: true
-  }
-
-  return c.json(data, { status: 200 })
-})
-
-export default app
-```
-
-If you wanted to add a database to Hono you can do so with a multitude of Typescript libraries like [Supabase](https://supabase.com), or ORMs like [Drizzle](https://orm.drizzle.team/docs/get-started) or [Prisma](https://www.prisma.io/orm)
-
-### Client
-
-bhvr uses Vite + React Typescript template, which means you can build your frontend just as you would with any other React app. This makes it flexible to add UI components like [shadcn/ui](https://ui.shadcn.com) or routing using [React Router](https://reactrouter.com/start/declarative/installation).
-
-```
-client
-├── eslint.config.js
-├── index.html
-├── package.json
-├── public
-│   └── vite.svg
-├── README.md
-├── src
-│   ├── App.css
-│   ├── App.tsx
-│   ├── assets
-│   ├── index.css
-│   ├── main.tsx
-│   └── vite-env.d.ts
-├── tsconfig.app.json
-├── tsconfig.json
-├── tsconfig.node.json
-└── vite.config.ts
-```
-
-```typescript src/App.tsx
-import { useState } from 'react'
-import beaver from './assets/beaver.svg'
-import { ApiResponse } from 'shared'
-import './App.css'
-
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000"
-
-function App() {
-  const [data, setData] = useState<ApiResponse | undefined>()
-
-  async function sendRequest() {
-    try {
-      const req = await fetch(`${SERVER_URL}/hello`)
-      const res: ApiResponse = await req.json()
-      setData(res)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  return (
-    <>
-      <div>
-        <a href="https://github.com/stevedylandev/bhvr" target="_blank">
-          <img src={beaver} className="logo" alt="beaver logo" />
-        </a>
-      </div>
-      <h1>bhvr</h1>
-      <h2>Bun + Hono + Vite + React</h2>
-      <p>A typesafe fullstack monorepo</p>
-      <div className="card">
-        <button onClick={sendRequest}>
-          Call API
-        </button>
-        {data && (
-          <pre className='response'>
-            <code>
-            Message: {data.message} <br />
-            Success: {data.success.toString()}
-            </code>
-          </pre>
-        )}
-      </div>
-      <p className="read-the-docs">
-        Click the beaver to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
-```
-
-### Shared
-
-The Shared package is used for anything you want to share between the Server and Client. This could be types or libraries that you use in both environments.
-
-```
-shared
-├── package.json
-├── src
-│   ├── index.ts
-│   └── types
-│       └── index.ts
-└── tsconfig.json
-```
-
-Inside the `src/index.ts` we export any of our code from the folders so it's usable in other parts of the monorepo
-
-```typescript
-export * from "./types"
-```
-
-By running `bun run dev` or `bun run build` it will compile and export the packages from `shared` so it can be used in either `client` or `server`
-
-```typescript
-import { ApiResponse } from 'shared'
-```
+├── client/   # React frontend
+├── server/   # Hono API
+├── shared/   # Shared TypeScript types
 
 ## Getting Started
 
-### Quick Start
-
-You can start a new bhvr project using the [CLI](https://github.com/stevedylandev/create-bhvr)
-
 ```bash
-bun create bhvr
-```
-
-### Installation
-
-```bash
-# Install dependencies for all workspaces
 bun install
-```
-
-### Development
-
-```bash
-# Run all workspaces in development mode with Turbo
 bun run dev
-
-# Or run individual workspaces directly
-bun run dev:client    # Run the Vite dev server for React
-bun run dev:server    # Run the Hono backend
 ```
 
-### Building
+## Related Links
 
-```bash
-# Build all workspaces with Turbo
-bun run build
-
-# Or build individual workspaces directly
-bun run build:client  # Build the React frontend
-bun run build:server  # Build the Hono backend
-```
-
-### Additional Commands
-
-```bash
-# Lint all workspaces
-bun run lint
-
-# Type check all workspaces
-bun run type-check
-
-# Run tests across all workspaces
-bun run test
-```
-
-### Deployment
-
-Deplying each piece is very versatile and can be done numerous ways, and exploration into automating these will happen at a later date. Here are some references in the meantime.
-
-**Client**
-- [Orbiter](https://orbiter.host)
-- [GitHub Pages](https://vite.dev/guide/static-deploy.html#github-pages)
-- [Netlify](https://vite.dev/guide/static-deploy.html#netlify)
-- [Cloudflare Pages](https://vite.dev/guide/static-deploy.html#cloudflare-pages)
-
-**Server**
-- [Cloudflare Worker](https://gist.github.com/stevedylandev/4aa1fc569bcba46b7169193c0498d0b3)
-- [Bun](https://hono.dev/docs/getting-started/bun)
-- [Node.js](https://hono.dev/docs/getting-started/nodejs)
-
-## Type Sharing
-
-Types are automatically shared between the client and server thanks to the shared package and TypeScript path aliases. You can import them in your code using:
-
-```typescript
-import { ApiResponse } from 'shared/types';
-```
-
-## Learn More
-
-- [Bun Documentation](https://bun.sh/docs)
-- [Vite Documentation](https://vitejs.dev/guide/)
-- [React Documentation](https://react.dev/learn)
-- [Hono Documentation](https://hono.dev/docs)
-- [Turbo Documentation](https://turbo.build/docs)
-- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
+- Portfolio: https://davidmoriarty.dev/projects/task-manager
+- GitHub: https://github.com/davidmoriarty/task-manager

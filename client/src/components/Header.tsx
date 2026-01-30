@@ -2,52 +2,46 @@
 import { useNavigate } from "react-router";
 
 type HeaderProps = {
-   token: string | null;
-   onLogout: () => void;
+  token: string | null;
+  onLogout: () => void;
 };
 
 export default function Header({ token, onLogout }: HeaderProps) {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-   return (
-      <header className="w-full h-[8vh] bg-slate-200 text-slate-900 dark:bg-slate-900 dark:text-slate-50 mb-20">
-         <div className="w-full h-full max-w-7xl mx-auto px-4 lg:px-8 flex flex-row items-center justify-between">
-            {/* Brand */}
-            <div
-               className="text-lg font-black cursor-pointer"
-               onClick={() => navigate("/")}
+  return (
+    <header className="sticky top-0 insex-x-0 z-40 py-3 bg-slate-200 text-slate-900 dark:bg-slate-900 dark:text-slate-50">
+      <div className="container mx-auto px-4 flex items-center justify-between">
+        {/* Brand */}
+        <a href="/" className="text-lg font-black">
+          Task Manager
+        </a>
+
+        {/* Nav links */}
+        <nav className="flex flex-row items-center justify-end gap-8 font-medium text-lg">
+          <a href="/" className=" hover:text-sky-600 transition-colors">
+            Home
+          </a>
+
+          {token ? (
+            <button
+              type="button"
+              onClick={onLogout}
+              className="bg-red-600 hover:bg-red-500 text-white px-4 py-1 rounded"
             >
-               Task Manager
-            </div>
-
-            {/* Nav links */}
-            <nav className="flex items-center justify-center gap-x-6 lg:gap-x-16 font-medium text-lg">
-               <a href="/" className=" hover:text-sky-600 transition-colors">
-                  Home
-               </a>
-               <a
-                  href="/about"
-                  className="hover:text-sky-600 transition-colors"
-               >
-                  About
-               </a>
-               {token ? (
-                  <button
-                     onClick={onLogout}
-                     className="bg-red-600 hover:bg-red-500 text-white px-4 py-1 rounded"
-                  >
-                     Logout
-                  </button>
-               ) : (
-                  <button
-                     onClick={() => navigate("/login")}
-                     className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded"
-                  >
-                     Login
-                  </button>
-               )}
-            </nav>
-         </div>
-      </header>
-   );
+              Logout
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded"
+            >
+              Login
+            </button>
+          )}
+        </nav>
+      </div>
+    </header>
+  );
 }

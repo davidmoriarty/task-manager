@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "bhvr",
+      "name": "task-manager",
       "dependencies": {
         "hono": "^4.10.5",
       },
