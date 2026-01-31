@@ -34,8 +34,8 @@ This app is built on top of the BHVR stack, which provides a lightweight full-st
 
 ## Screenshots
 
-![Task Manager – Tasks View](./docs/task-manager-tasks.png)
-![Task Manager – Login View](./docs/task-manager-login.png)
+![Task Manager – Task List View](./docs/screenshots/taskmanager-tasklist.png)
+![Task Manager – Login View](./docs/screenshots/taskmanager-login.png)
 
 ## Status
 
@@ -99,9 +99,9 @@ These changes are intentionally deferred in this version to keep the project foc
 
 ## Project Structure
 
-├── client/   # React frontend
-├── server/   # Hono API
-├── shared/   # Shared TypeScript types
+- ├── client/   # React frontend
+- ├── server/   # Hono API
+- ├── shared/   # Shared TypeScript types
 
 ## Getting Started
 

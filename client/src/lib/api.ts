@@ -1,7 +1,7 @@
 // client/src/lib/api.ts
-import type { Task } from "shared/dist";
+import type { Task } from "@shared";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
 // Helper to include token in requests
 export async function authFetch<T>(

@@ -3,10 +3,11 @@ import { useNavigate } from "react-router";
 import { login } from "../lib/api";
 
 export default function Login({ onLogin }: { onLogin: () => void }) {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -20,22 +21,25 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
   }
 
   return (
-    <section className="py-24">
+    <section className="min-h-[90vh] flex flex-col items-center justify-center gap-4 py-16">
       <div className="container mx-auto px-8">
-        <div className="py-8 text-center">
-          <h1 className="text-3xl lg:text-4xl text-center font-black leading-relaxed">
-            Login
-          </h1>
-          <p className="text-lg font-medium text-center text-muted-foreground">
-            Log in to your account
-          </p>
-        </div>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center space-y-5">
+          <div className="w-full mx-auto">
+            <h1 className="text-3xl lg:text-4xl text-center font-black leading-relaxed">
+              Login
+            </h1>
+            <p className="text-lg font-medium text-center text-muted-foreground">
+              Log in to your account
+            </p>
+          </div>
 
-        <form onSubmit={handleSubmit} className="w-full mx-auto">
-          <div className="w-ful mx-auto max-w-4xl flex flex-col items-center justify-center gap-5">
+          <div className="w-full mx-auto">
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+          </div>
+
+          <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto space-y-6">
             <div className="w-full mx-auto">
-              <label htmlFor="username" className="text-slate-800 sr-only">
+              <label htmlFor="username">
                 Username
               </label>
               <input
@@ -49,7 +53,7 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
             </div>
 
             <div className="w-full mx-auto">
-              <label htmlFor="password" className="text-slate-800 sr-only">
+              <label htmlFor="password">
                 Password
               </label>
               <input
@@ -62,14 +66,16 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
               />
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-sky-500 hover:bg-sky-600 text-white rounded py-2 font-medium"
-            >
-              Login
-            </button>
-          </div>
-        </form>
+            <div className="w-full mx-auto mb-6">
+              <button
+                type="submit"
+                className="w-full bg-sky-500 hover:bg-sky-600 text-white rounded py-2 font-medium"
+              >
+                Login
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </section>
   );
