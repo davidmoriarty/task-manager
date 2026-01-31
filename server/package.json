@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "bun --watch run src/index.ts & tsc --watch",
-    "start": "bun dist/index.js"
+    "start": "bun dist/start.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
