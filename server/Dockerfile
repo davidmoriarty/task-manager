@@ -54,4 +54,4 @@ COPY --from=build /app/server/package.json ./server/package.json
 COPY --from=build /app/server/bun.lock ./server/bun.lock
 
 EXPOSE 3000
-CMD ["bun", "run", "--cwd", "server", "start"]
+CMD ["bun", "server/dist/index.js"]
