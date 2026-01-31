@@ -43,15 +43,13 @@ FROM oven/bun:1.2.4 AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Root workspace deps live here
+# Only what we need at runtime
 COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/bun.lock ./bun.lock
-COPY --from=build /app/package.json ./package.json
-
-# App code + build shared package
 COPY --from=build /app/server/dist ./server/dist
 COPY --from=build /app/server/package.json ./server/package.json
-COPY --from=build /app/server/bun.lock ./server/bun.lock
+
+# Run from the server workspace so bun definitely reads server/package.json
+WORKDIR /app/server
 
 EXPOSE 3000
-CMD ["bun", "server/dist/index.js"]
+CMD ["bun", "run", "start"]
