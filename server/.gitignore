@@ -11,3 +11,7 @@ dist/
 
 # logs
 *.log
+
+*.sqlite
+*.db
+.data/
