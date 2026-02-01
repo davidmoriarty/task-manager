@@ -41,7 +41,7 @@ export const app = new Hono<{ Variables: ContextUser }>()
   })
 
   // JWT middleware for private routes
-  .use("/tasks/*", async (c, next) => {
+  .use("/tasks", async (c, next) => {
     const authHeader = c.req.header("Authorization");
     const token = authHeader?.split(" ")[1];
 
