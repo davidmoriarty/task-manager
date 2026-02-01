@@ -13,9 +13,6 @@ COPY client/package.json ./client/package.json
 # If your server/shared tsconfigs are referenced during install/build tooling, copy them too
 COPY server/tsconfig.json ./server/tsconfig.json
 COPY shared/tsconfig.json ./shared/tsconfig.json
-COPY client/tsconfig.json ./client/tsconfig.json
-COPY client/tsconfig.app.json ./client/tsconfig.app.json
-COPY client/tsconfig.node.json ./client/tsconfig.node.json
 
 # Install all workspace deps (from root)
 # without running root postinstall
@@ -34,7 +31,6 @@ COPY --from=deps /app/tsconfig.json ./tsconfig.json
 # Copy source
 COPY server ./server
 COPY shared ./shared
-COPY client ./client
 
 # Build shared + server
 RUN bunx turbo build --filter=shared --filter=server
