@@ -6,6 +6,11 @@ type User = {
    passwordHash: string;
 };
 
+/**
+ * In-memory user store.
+ * This is intentionally non-persistent for demo purposes.
+ * All data is lost on process restart.
+ */
 export const users: User[] = [];
 
 // Helper to create a user

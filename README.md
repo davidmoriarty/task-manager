@@ -14,6 +14,19 @@ This project exists to demonstrate:
 - Shared domain models across frontend and backend
 - A modern full-stack setup without framework lock-in
 
+To support this goal, the application is intentionally implemented with specific architectural constraints.
+
+## Stateless Demo Mode
+
+This project is intentionally implemented as a **stateless demo API**.
+
+- User accounts and tasks are stored **in memory** on the server.
+- All data resets on server restart or redeploy.
+- JWTs are used for authentication with expiration, issuer, and audience validation.
+- The goal is to demonstrate **API design, shared types, and auth flows**, not persistence.
+
+A database-backed version of this architecture is intentionally deferred and explored separately.
+
 ## Tech Stack
 
 - **Runtime:** Bun
@@ -22,7 +35,7 @@ This project exists to demonstrate:
 - **Type Sharing:** Shared workspace package
 - **Monorepo Tooling:** Turbo
 
-This app is built on top of the BHVR stack, which provides a lightweight full-stack monorepo with shared types and flexible deployment options.
+This app follows the BHVR stack approach, providing a lightweight full-stack monorepo with shared types and flexible deployment options.
 
 ## Features
 
@@ -44,7 +57,15 @@ Core functionality is complete and stable.
 Planned follow-ups include:
 - Database-backed persistence
 - Production-grade authentication
-- Deployment configuration
+- Expanded production hardening
+
+## Deployment Notes
+
+The backend API is deployed for demonstration purposes.
+
+- The deployed API is **stateless** and may reset at any time.
+- It is not intended for persistent user data or production workloads.
+- Health and availability are monitored, but durability is not guaranteed.
 
 ## Limitations & Design Notes
 
@@ -53,7 +74,9 @@ This project is intentionally scoped for architectural clarity rather than produ
 - **Authentication**
   - Uses a simplified token-based flow suitable for demos and local development.
   - Tokens are stored client-side and are not persisted across server restarts.
-  - No password hashing or OAuth flows are implemented in this version.
+  - JWTs are short-lived and expire automatically after a set period.
+  - Passwords are hashed using bcrypt.
+  - No OAuth or refresh-token rotation is implemented in this version.
 
 - **Persistence**
   - Tasks are stored in memory on the server.
