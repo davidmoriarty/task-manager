@@ -143,5 +143,3 @@ export const app = new Hono<{ Variables: ContextUser }>()
       tasks = tasks.filter((t) => !(t.id === id && t.userId === userId));
       return c.json({ message: "Task deleted", success: true });
    });
-
-//export default app;
