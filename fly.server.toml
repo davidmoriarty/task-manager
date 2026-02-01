@@ -5,7 +5,7 @@ primary_region = "yyz"
 dockerfile = "server/Dockerfile"
 
 [processes]
-app = "sh -lc 'sleep 3600'"
+app = "sh -lc 'cd /app/server && bun dist/start.js'"
 
 [http_service]
 internal_port = 3000
