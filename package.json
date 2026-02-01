@@ -2,16 +2,15 @@
    "name": "task-manager",
    "version": "0.4.0",
    "description": "A full-stack task management application built with Bun, Hono, and React, demonstrating shared types and clean API boundaries.",
-
    "author": {
-     "name": "David Moriarty",
-     "url": "https://davidmoriarty.dev"
+      "name": "David Moriarty",
+      "url": "https://davidmoriarty.dev"
    },
    "license": "MIT",
    "homepage": "https://davidmoriarty.dev/projects/task-manager",
    "repository": {
-     "type": "git",
-     "url": "https://github.com/davidmoriarty/task-manager"
+      "type": "git",
+      "url": "https://github.com/davidmoriarty/task-manager"
    },
    "keywords": [
       "bun",
@@ -21,14 +20,12 @@
       "monorepo",
       "turbo"
    ],
-
-   "packageManager": "bun@1.2.4",
+   "packageManager": "bun@1.2.15",
    "workspaces": [
       "./server",
       "./client",
       "./shared"
    ],
-
    "scripts": {
       "dev": "turbo dev",
       "dev:client": "turbo dev --filter=client",
@@ -42,12 +39,11 @@
       "test": "turbo test",
       "postinstall": "turbo build --filter=shared --filter=server"
    },
-
    "dependencies": {
-      "hono": "^4.10.5"
+      "hono": "^4.11.7"
    },
    "devDependencies": {
-      "@biomejs/biome": "^2.3.5",
+      "@biomejs/biome": "^2.3.13",
       "bun-types": "latest",
       "turbo": "^2.5.5"
    },
