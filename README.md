@@ -74,15 +74,14 @@ Note: Data is stored in memory and resets on server restart. This is intentional
 
 ```mermaid
 flowchart LR
-  U[User Browser] -->|HTTPS| CF[Cloudflare Pages - React App]
+  U[User Browser] -->|HTTPS| CF[Cloudflare Pages]
   CF -->|fetch + JWT| API[Fly.io - Hono API (Bun)]
 
   subgraph Client
     UI[Views / Components]
-    APIClient[api.ts - authFetch, login, tasks]
-    Store[localStorage - JWT token]
-    UI --> APIClient
-    APIClient --> Store
+    APIClient[api.ts]
+    Store[localStorage]
+    UI --> APIClient --> Store
   end
 
   subgraph Server
