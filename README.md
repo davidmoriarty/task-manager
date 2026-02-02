@@ -76,14 +76,14 @@ Note: Data is stored in memory and resets on server restart. This is intentional
 flowchart LR
   U[User Browser] -->|HTTPS| CF[Cloudflare Pages]
   CF -->|fetch + JWT| API[Fly.io - Hono API (Bun)]
-
+  
   subgraph Client
     UI[Views / Components]
     APIClient[api.ts]
     Store[localStorage]
     UI --> APIClient --> Store
   end
-
+  
   subgraph Server
     Auth[/auth/signup and /auth/login/]
     Tasks[/tasks and /tasks/:id/toggle/]
@@ -93,7 +93,7 @@ flowchart LR
     Auth --> Users
     Tasks --> JWT --> TaskStore
   end
-
+  
   CF --- Client
   API --- Server
 ```
