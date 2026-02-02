@@ -3,7 +3,7 @@ import { cors } from "hono/cors";
 import type { ApiResponse, Task } from "shared";
 import { verifyToken } from "./lib/jwt";
 import { auth } from "./routes/auth";
-import { tasks } from "./tasks";
+import { taskStore } from "./tasks";
 
 // Define custom context type with userId
 type ContextUser = { userId: string };
@@ -46,7 +46,7 @@ export const app = new Hono<{ Variables: ContextUser }>()
   })
 
   // JWT middleware for private routes
-  .use("/tasks", async (c, next) => {
+  .use("/tasks/*", async (c, next) => {
     const authHeader = c.req.header("Authorization");
     const token = authHeader?.split(" ")[1];
 
@@ -66,8 +66,7 @@ export const app = new Hono<{ Variables: ContextUser }>()
   // Task routes
   .get("/tasks", (c) => {
     const userId = c.get("userId");
-    const userTasks = tasks.filter((t) => t.userId === userId);
-    return c.json<Task[]>(userTasks);
+    return c.json(taskStore.tasks.filter((t) => t.userId === userId));
   })
 
   .post("/tasks", async (c) => {
@@ -85,7 +84,7 @@ export const app = new Hono<{ Variables: ContextUser }>()
       userId,
     };
 
-    tasks.push(newTask);
+    taskStore.tasks.push(newTask);
     return c.json(
       {
         message: "Task created successfully",
@@ -98,7 +97,9 @@ export const app = new Hono<{ Variables: ContextUser }>()
   .put("/tasks/:id/toggle", (c) => {
     const id = c.req.param("id");
     const userId = c.get("userId");
-    const task = tasks.find((t) => t.id === id && t.userId === userId);
+    const task = taskStore.tasks.find(
+      (t) => t.id === id && t.userId === userId,
+    );
     if (!task)
       return c.json(
         { message: "Task not found", success: false },
@@ -116,15 +117,17 @@ export const app = new Hono<{ Variables: ContextUser }>()
     const id = c.req.param("id");
     const userId = c.get("userId");
 
-    const index = tasks.findIndex((t) => t.id === id && t.userId === userId);
-    if (index === -1) {
+    const before = taskStore.tasks.length;
+    taskStore.tasks = taskStore.tasks.filter(
+      (t) => !(t.id === id && t.userId === userId),
+    );
+
+    if (taskStore.tasks.length === before) {
       return c.json(
         { message: "Task not found", success: false },
         { status: 404 },
       );
     }
-
-    tasks.splice(index, 1);
 
     return c.json({ message: "Task deleted", success: true });
   });
