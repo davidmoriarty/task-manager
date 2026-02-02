@@ -75,7 +75,7 @@ Note: Data is stored in memory and resets on server restart. This is intentional
 ```mermaid
 flowchart LR
   U[User Browser] -->|HTTPS| CF[Cloudflare Pages]
-  CF -->|fetch + JWT| API[Fly.io - Hono API (Bun)]
+  CF -->|fetch + JWT| API[Fly.io - Hono API (Bun)];
 
   subgraph Client
     UI[Views & Components]
