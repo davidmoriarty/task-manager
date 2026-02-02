@@ -70,38 +70,8 @@ You should receive an empty array until tasks are created via the UI.
 
 Note: Data is stored in memory and resets on server restart. This is intentional for demo purposes.
 
-## Architecture Diagram
+## Architecture (ASCII)
 
-```mermaid
-flowchart LR
-  U[User Browser] -->|HTTPS| CF[Cloudflare Pages]
-  CF -->|fetch + JWT| API[Fly.io - Hono API (Bun)];
-
-  subgraph Client
-    UI[Views & Components]
-    APIClient[api.ts]
-    Store[localStorage JWT]
-    UI --> APIClient --> Store
-  end
-
-  subgraph Server
-    Auth["auth signup & login"]
-    Tasks["tasks & toggle"]
-    JWT[JWT middleware sets userId]
-    Users[(users in memory)]
-    TaskStore[(tasks in memory)]
-
-    Auth --> Users
-    Tasks --> JWT --> TaskStore
-  end
-
-  CF --- Client
-  API --- Server
-```
-
-If the diagram does not render in your viewer, see the ASCII version in the repository.
-
-### Architecture (ASCII fallback)
 ```text
 ┌──────────────────────────┐
 │        Browser            │
