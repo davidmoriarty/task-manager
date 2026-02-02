@@ -1,22 +1,25 @@
-import { auth } from "./routes/auth";
-import { verifyToken } from "./lib/jwt";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import type { ApiResponse, Task } from "shared/dist";
+import type { ApiResponse, Task } from "shared";
+import { verifyToken } from "./lib/jwt";
+import { auth } from "./routes/auth";
+import { tasks } from "./tasks";
 
 // Define custom context type with userId
 type ContextUser = { userId: string };
 
-// In-memory tasks array
-let tasks: Task[] = [
-   { id: "1", title: "First Task", completed: false, userId: "user1" },
-   { id: "2", title: "Second Task", completed: true, userId: "user2" },
-];
-
 const startedAtMs = Date.now();
 
 export const app = new Hono<{ Variables: ContextUser }>()
-  .use("*", cors())
+  .use(
+    "*",
+    cors({
+      origin: ["https://task-manager-client.pages.dev"],
+      allowHeaders: ["Content-Type", "Authorization"],
+      allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      credentials: false,
+    }),
+  )
   .route("/auth", auth)
 
   // Info endpoint (non-sensitive)
@@ -34,7 +37,9 @@ export const app = new Hono<{ Variables: ContextUser }>()
   })
 
   // Test routes
-  .get("/", (c) => { return c.text("Hello Hono!") })
+  .get("/", (c) => {
+    return c.text("Hello Hono!");
+  })
   .get("/hello", async (c) => {
     const data: ApiResponse = { message: "Hello BHVR!", success: true };
     return c.json(data, { status: 200 });
@@ -46,7 +51,7 @@ export const app = new Hono<{ Variables: ContextUser }>()
     const token = authHeader?.split(" ")[1];
 
     if (!token) {
-        return c.json({ message: "Unauthorized", success: false }, 401);
+      return c.json({ message: "Unauthorized", success: false }, 401);
     }
 
     try {
@@ -64,59 +69,62 @@ export const app = new Hono<{ Variables: ContextUser }>()
     const userTasks = tasks.filter((t) => t.userId === userId);
     return c.json<Task[]>(userTasks);
   })
+
   .post("/tasks", async (c) => {
     const { title } = await c.req.json<{ title: string }>();
     const userId = c.get("userId");
 
     if (!title?.trim()) {
-        return c.json(
-          { message: "Task title is required", success: false },
-          400,
-        );
+      return c.json({ message: "Task title is required", success: false }, 400);
     }
 
     const newTask: Task = {
-        id: String(tasks.length + 1),
-        title: title.trim(),
-        completed: false,
-        userId,
+      id: crypto.randomUUID(),
+      title: title.trim(),
+      completed: false,
+      userId,
     };
 
     tasks.push(newTask);
     return c.json(
-        {
-          message: "Task created successfully",
-          success: true,
-        },
-        { status: 201 },
+      {
+        message: "Task created successfully",
+        success: true,
+      },
+      { status: 201 },
     );
   })
+
   .put("/tasks/:id/toggle", (c) => {
     const id = c.req.param("id");
     const userId = c.get("userId");
     const task = tasks.find((t) => t.id === id && t.userId === userId);
     if (!task)
-        return c.json(
-          { message: "Task not found", success: false },
-          { status: 404 },
-        );
+      return c.json(
+        { message: "Task not found", success: false },
+        { status: 404 },
+      );
 
     task.completed = !task.completed;
     return c.json(
-        { message: "Task updated successfully", success: true },
-        { status: 200 },
+      { message: "Task updated successfully", success: true },
+      { status: 200 },
     );
   })
+
   .delete("/tasks/:id", (c) => {
     const id = c.req.param("id");
     const userId = c.get("userId");
-    const existing = tasks.find((t) => t.id === id && t.userId === userId);
-    if (!existing)
-        return c.json(
-          { message: "Task not found", success: false },
-          { status: 404 },
-        );
 
-    tasks = tasks.filter((t) => !(t.id === id && t.userId === userId));
+    const index = tasks.findIndex((t) => t.id === id && t.userId === userId);
+    if (index === -1) {
+      return c.json(
+        { message: "Task not found", success: false },
+        { status: 404 },
+      );
+    }
+
+    tasks.splice(index, 1);
+
     return c.json({ message: "Task deleted", success: true });
   });

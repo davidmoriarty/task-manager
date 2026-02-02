@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { signToken } from "../lib/jwt";
 import { createUser, validateUser } from "../db";
+import { signToken } from "../lib/jwt";
 
 export const auth = new Hono()
   .post("/signup", async (c) => {
