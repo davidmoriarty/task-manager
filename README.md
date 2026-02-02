@@ -34,7 +34,7 @@ Because there is no signup UI in demo mode, see **Quick Demo (2 minutes)** below
 
 ## Quick Demo (2 minutes)
 
-This app uses JWT authentication. There is currently no signup UI in demo mode, so a demo user is created via `curl`.
+This app uses JWT authentication. There is intentionally no signup UI in demo mode, so a demo user is created via `curl`.
 
 ### 1. Create a user
 ```bash
@@ -70,6 +70,69 @@ You should receive an empty array until tasks are created via the UI.
 
 Note: Data is stored in memory and resets on server restart. This is intentional for demo purposes.
 
+## Architecture Diagram
+
+```mermaid
+flowchart LR
+  U[User Browser] -->|HTTPS| CF[Cloudflare Pages<br/>Static React App]
+  CF -->|fetch + JWT| API[Fly.io<br/>Hono API (Bun)]
+
+  subgraph Client
+    UI[Views / Components]
+    APIClient[api.ts<br/>authFetch, login, tasks]
+    Store[localStorage<br/>JWT token]
+    UI --> APIClient
+    APIClient --> Store
+  end
+
+  subgraph Server
+    Auth[/auth/signup<br/>/auth/login/]
+    Tasks[/tasks<br/>/tasks/:id/toggle/]
+    JWT[JWT middleware<br/>sets userId]
+    Users[(users[]<br/>in memory)]
+    TaskStore[(tasks[]<br/>in memory)]
+    Auth --> Users
+    Tasks --> JWT --> TaskStore
+  end
+
+  CF --- Client
+  API --- Server
+```
+
+If the diagram does not render in your viewer, see the ASCII version in the repository.
+
+### Architecture (ASCII fallback)
+```text
+┌──────────────────────────┐
+│        Browser            │
+└───────────┬──────────────┘
+│ HTTPS
+▼
+┌──────────────────────────┐
+│ Cloudflare Pages          │
+│ Static React (Vite build) │
+└───────────┬──────────────┘
+│ fetch() + Authorization: Bearer 
+▼
+┌──────────────────────────┐
+│ Fly.io                    │
+│ Hono API (Bun runtime)    │
+│                           │
+│  /auth/signup  /auth/login│
+│  /tasks  /tasks/:id/toggle│
+│                           │
+│  JWT middleware verifies  │
+│  token and sets userId    │
+└───────┬─────────┬────────┘
+│         │
+│         │
+▼         ▼
+┌──────────┐  ┌──────────┐
+│ users[]   │  │ tasks[]   │
+│ (memory)  │  │ (memory)  │
+└──────────┘  └──────────┘
+```
+
 ## Screenshots
 
 ![Task Manager – Task List View](./docs/screenshots/taskmanager-tasklist.png)
@@ -84,37 +147,6 @@ Note: Data is stored in memory and resets on server restart. This is intentional
 - **Monorepo Tooling:** Turbo
 
 This app follows the BHVR stack approach, providing a lightweight full-stack monorepo with shared types and flexible deployment options.
-
-## Architecture Diagram
-
-```mermaid
-flowchart LR
-  U[User Browser] -->|HTTPS| CF[Cloudflare Pages\nStatic React App]
-  CF -->|fetch() + Authorization: Bearer JWT| API[Fly.io\nHono API (Bun)]
-
-  subgraph Client[Client (React + Vite)]
-    UI[Views / Components]
-    APIClient[api.ts\n(authFetch, login, tasks CRUD)]
-    Store[localStorage\nJWT token]
-    UI --> APIClient
-    APIClient --> Store
-  end
-
-  subgraph Server[Server (Hono + Bun)]
-    Auth[/auth/signup\n/auth/login/]
-    Tasks[/tasks\n/tasks/:id/toggle\n/tasks/:id/]
-    JWT[JWT verify middleware\nsets userId]
-    Users[(In-memory users[])]
-    TaskStore[(In-memory tasks[])]
-    Auth --> Users
-    Tasks --> JWT --> TaskStore
-  end
-
-  CF --- Client
-  API --- Server
-```
-
-“If Mermaid doesn’t render in your viewer, see the ASCII diagram in the repo docs.”
 
 ## Status
 
