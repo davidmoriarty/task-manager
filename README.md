@@ -4,6 +4,9 @@ A full-stack task management application built with Bun, Hono, React, and shared
 
 This project focuses on end-to-end application architecture using the BHVR stack, emphasizing shared types, clean API boundaries, authentication flows, and pragmatic UI state management.
 
+**Live demo:** https://task-manager-client.pages.dev  
+*(Stateless demo — see **Quick Demo (2 minutes)** below to create a user)*
+
 ## Why this project
 
 This project exists to demonstrate:
@@ -27,6 +30,51 @@ This project is intentionally implemented as a **stateless demo API**.
 
 A database-backed version of this architecture is intentionally deferred and explored separately.
 
+Because there is no signup UI in demo mode, see **Quick Demo (2 minutes)** below to create a user and try the app.
+
+## Quick Demo (2 minutes)
+
+This app uses JWT authentication. There is currently no signup UI in demo mode, so a demo user is created via `curl`.
+
+### 1. Create a user
+```bash
+curl -i \
+  -H "Content-Type: application/json" \
+  -X POST "https://server-aged-dew-6516.fly.dev/auth/signup" \
+  -d '{"username":"demo","password":"test1234"}'
+```
+
+### 2. Log in
+```bash
+curl -i \
+  -H "Content-Type: application/json" \
+  -X POST "https://server-aged-dew-6516.fly.dev/auth/login" \
+  -d '{"username":"demo","password":"test1234"}'
+```
+The response will include a JWT token.
+
+### (Optional) Verify the API directly
+```bash
+curl -H "Authorization: Bearer <TOKEN>" \
+  https://server-aged-dew-6516.fly.dev/tasks
+```
+
+You should receive an empty array until tasks are created via the UI.
+
+### 3. Use the app
+- Visit: https://task-manager-client.pages.dev
+- Log in with:
+  - Username: demo
+  - Password: test1234
+- Create, toggle, and delete tasks
+
+Note: Data is stored in memory and resets on server restart. This is intentional for demo purposes.
+
+## Screenshots
+
+![Task Manager – Task List View](./docs/screenshots/taskmanager-tasklist.png)
+![Task Manager – Login View](./docs/screenshots/taskmanager-login.png)
+
 ## Tech Stack
 
 - **Runtime:** Bun
@@ -37,18 +85,36 @@ A database-backed version of this architecture is intentionally deferred and exp
 
 This app follows the BHVR stack approach, providing a lightweight full-stack monorepo with shared types and flexible deployment options.
 
-## Features
+## Architecture Diagram
 
-- User authentication flow suitable for local development and demos
-- Task creation, completion, and deletion
-- Client-side state synchronized with backend APIs using explicit request/response flows
-- Shared task and user types across frontend and backend
-- Clear separation of API, UI, and shared domain logic
+```mermaid
+flowchart LR
+  U[User Browser] -->|HTTPS| CF[Cloudflare Pages\nStatic React App]
+  CF -->|fetch() + Authorization: Bearer JWT| API[Fly.io\nHono API (Bun)]
 
-## Screenshots
+  subgraph Client[Client (React + Vite)]
+    UI[Views / Components]
+    APIClient[api.ts\n(authFetch, login, tasks CRUD)]
+    Store[localStorage\nJWT token]
+    UI --> APIClient
+    APIClient --> Store
+  end
 
-![Task Manager – Task List View](./docs/screenshots/taskmanager-tasklist.png)
-![Task Manager – Login View](./docs/screenshots/taskmanager-login.png)
+  subgraph Server[Server (Hono + Bun)]
+    Auth[/auth/signup\n/auth/login/]
+    Tasks[/tasks\n/tasks/:id/toggle\n/tasks/:id/]
+    JWT[JWT verify middleware\nsets userId]
+    Users[(In-memory users[])]
+    TaskStore[(In-memory tasks[])]
+    Auth --> Users
+    Tasks --> JWT --> TaskStore
+  end
+
+  CF --- Client
+  API --- Server
+```
+
+“If Mermaid doesn’t render in your viewer, see the ASCII diagram in the repo docs.”
 
 ## Status
 
@@ -132,6 +198,27 @@ These changes are intentionally deferred in this version to keep the project foc
 bun install
 bun run dev
 ```
+
+## Appendix: Why BHVR?
+
+This project follows a BHVR-style full-stack setup:
+
+- **B**un — fast runtime + package manager, consistent tooling across the monorepo
+- **H**ono — small, explicit routing/middleware model that keeps API boundaries clear
+- **V**ite — fast frontend dev/build pipeline with a simple deployment artifact (`dist/`)
+- **R**eact — pragmatic UI composition with a mature ecosystem
+
+### Why this combination?
+
+- **Clear API boundary:** the server is a small Hono app with explicit routes + middleware.
+- **Shared types end-to-end:** a `shared` workspace package exports domain models (e.g. `Task`, `User`, `ApiResponse`) so the client and server stay aligned.
+- **Monorepo ergonomics:** Turbo coordinates builds across `shared`, `server`, and `client` while keeping each deployable independently.
+- **Minimal framework lock-in:** the architecture is intentionally lightweight—swap the DB layer, swap auth strategy, deploy client/server separately, etc.
+
+### What this project is optimized for
+
+- Demonstrating full-stack architecture, shared typing, and predictable request/response flows
+- Keeping the codebase understandable and portable to production hardening (DB, cookies, schema validation, rate limiting)
 
 ## Related Links
 
