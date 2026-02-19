@@ -14,7 +14,10 @@ export const app = new Hono<{ Variables: ContextUser }>()
   .use(
     "*",
     cors({
-      origin: ["https://task-manager-client.pages.dev"],
+      origin: [
+        "https://task-manager.davidmoriarty.dev",
+        "https://task-manager-client.pages.dev",
+      ],
       allowHeaders: ["Content-Type", "Authorization"],
       allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       credentials: false,
