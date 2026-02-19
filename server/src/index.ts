@@ -11,6 +11,18 @@ type ContextUser = { userId: string };
 const startedAtMs = Date.now();
 
 export const app = new Hono<{ Variables: ContextUser }>()
+
+  .onError((err, c) => {
+    console.error("Hono onError:", {
+      method: c.req.method,
+      path: c.req.path,
+      url: c.req.url,
+      message: err instanceof Error ? err.message : String(err),
+    });
+
+    return c.json({ error: "Internal Server Error" }, 500);
+  })
+
   .use(
     "*",
     cors({
