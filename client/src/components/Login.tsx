@@ -33,15 +33,16 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
             </p>
           </div>
 
-          <div className="w-full mx-auto">
+          <div className="w-full max-w-2xl mx-auto">
             {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
 
-          <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto space-y-6">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full max-w-2xl mx-auto space-y-6"
+          >
             <div className="w-full mx-auto">
-              <label htmlFor="username">
-                Username
-              </label>
+              <label htmlFor="username">Username</label>
               <input
                 id="username"
                 type="text"
@@ -53,9 +54,7 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
             </div>
 
             <div className="w-full mx-auto">
-              <label htmlFor="password">
-                Password
-              </label>
+              <label htmlFor="password">Password</label>
               <input
                 id="password"
                 type="password"
