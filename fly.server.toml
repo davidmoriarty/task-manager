@@ -10,13 +10,13 @@ app = "sh -lc 'cd /app/server && bun dist/start.js'"
 [http_service]
 internal_port = 3000
 force_https = true
-auto_stop_machines = "off"
+auto_stop_machines = "stop"
 auto_start_machines = true
-min_machines_running = 1
+min_machines_running = 0
 processes = ["app"]
 
 [[http_service.checks]]
-interval = "15s"
+interval = "30s"
 timeout = "5s"
 grace_period = "10s"
 method = "GET"
