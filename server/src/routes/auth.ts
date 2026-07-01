@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { createUser, validateUser } from "../db";
+import { createUser, getOrCreateDemoUser, validateUser } from "../db";
 import { signToken } from "../lib/jwt";
 
 export const auth = new Hono()
@@ -25,4 +25,15 @@ export const auth = new Hono()
 
     const token = signToken({ id: user.id });
     return c.json({ token, username: user.username });
+  })
+
+  .post("/demo", async (c) => {
+    const user = await getOrCreateDemoUser();
+
+    const token = signToken({ id: user.id });
+
+    return c.json({
+      token,
+      username: user.username,
+    });
   });

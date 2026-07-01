@@ -42,6 +42,24 @@ export async function login(username: string, password: string) {
   return data;
 }
 
+// Demo Login
+export async function loginDemo() {
+  const res = await fetch(`${BASE_URL}/auth/demo`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Demo login failed: ${res.status}`);
+  }
+
+  const data = await res.json();
+  localStorage.setItem("token", data.token);
+  return data;
+}
+
 // Task API functions
 export function getTasks() {
   return authFetch<Task[]>("/tasks");

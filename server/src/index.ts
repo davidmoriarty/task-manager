@@ -27,6 +27,7 @@ export const app = new Hono<{ Variables: ContextUser }>()
     "*",
     cors({
       origin: [
+        "http://localhost:5173",
         "https://task-manager.davidmoriarty.dev",
         "https://task-manager-client.pages.dev",
       ],

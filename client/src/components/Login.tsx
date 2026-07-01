@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { login } from "../lib/api";
+import { login, loginDemo } from "../lib/api";
 
 export default function Login({ onLogin }: { onLogin: () => void }) {
   const navigate = useNavigate();
@@ -17,6 +17,16 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
       navigate("/");
     } catch {
       setError("Invalid username or password");
+    }
+  }
+
+  async function handleDemo() {
+    try {
+      await loginDemo();
+      onLogin();
+      navigate("/");
+    } catch {
+      setError("Unable to start demo");
     }
   }
 
@@ -65,12 +75,22 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
               />
             </div>
 
-            <div className="w-full mx-auto mb-6">
+            <div className="w-full mx-auto mb-3">
               <button
                 type="submit"
                 className="w-full bg-sky-500 hover:bg-sky-600 text-white rounded py-2 font-medium"
               >
                 Login
+              </button>
+            </div>
+
+            <div className="w-full mx-auto">
+              <button
+                type="button"
+                onClick={handleDemo}
+                className="w-full border border-slate-300 hover:bg-slate-100 rounded py-2 font-medium"
+              >
+                Try Demo
               </button>
             </div>
           </form>
