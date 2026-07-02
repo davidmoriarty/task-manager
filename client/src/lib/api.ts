@@ -23,6 +23,16 @@ export async function authFetch<T>(
   return res.json() as Promise<T>;
 }
 
+function persistAuth(data: {
+  token: string;
+  username: string;
+  isDemoUser?: boolean;
+}) {
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("username", data.username);
+  localStorage.setItem("isDemoUser", String(data.isDemoUser ?? false));
+}
+
 // Login function
 export async function login(username: string, password: string) {
   const res = await fetch(`${BASE_URL}/auth/login`, {
@@ -38,7 +48,7 @@ export async function login(username: string, password: string) {
   }
 
   const data = await res.json();
-  localStorage.setItem("token", data.token);
+  persistAuth(data);
   return data;
 }
 
@@ -56,7 +66,7 @@ export async function loginDemo() {
   }
 
   const data = await res.json();
-  localStorage.setItem("token", data.token);
+  persistAuth(data);
   return data;
 }
 

@@ -4,10 +4,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createTask, deleteTask, getTasks, toggleTask } from "@/lib/api";
 
-export default function Home() {
+export default function Home({ isDemoUser }: { isDemoUser: boolean }) {
   const queryClient = useQueryClient();
   const [newTitle, setNewTitle] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
+  const [showDemoNotice, setShowDemoNotice] = useState(isDemoUser);
 
   // Fetch tasks
   const { data: tasks, isLoading } = useQuery<Task[]>({
@@ -41,15 +42,41 @@ export default function Home() {
   });
 
   return (
-    <div className="w-full max-w-screen-lg mx-auto flex flex-col items-center justify-center gap-y-8 p-4">
-      <div className="container mx-auto py-12">
-        <h1 className="text-3xl lg:text-4xl text-center font-black leading-relaxed">
+    <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center gap-y-3 p-4">
+      <div className="container mx-auto mb-4 pt-4 pb-8">
+        <h1 className="text-2xl lg:text-4xl text-center font-semibold lg:font-black leading-relaxed">
           Task List
         </h1>
         <p className="text-lg font-medium text-center text-muted-foreground">
           Manage your tasks efficiently.
         </p>
       </div>
+
+      {isDemoUser && showDemoNotice && (
+        <div
+          className="container mx-auto max-w-5xl rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 mb-10 text-amber-950 shadow-sm"
+          role="note"
+          aria-label="Demo mode notice"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div className="text-sm">
+              <p>
+                <strong>Demo mode:</strong> This is a temporary demo workspace.
+              </p>
+              <p>Please don't enter sensitive information.</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowDemoNotice(false)}
+              className="shrink-0 rounded px-2 text-lg leading-none text-amber-950 hover:bg-amber-100"
+              aria-label="Dismiss notice"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Display error message */}
       {inputError && (

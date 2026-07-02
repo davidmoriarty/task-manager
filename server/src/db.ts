@@ -32,13 +32,7 @@ export async function validateUser(username: string, password: string) {
 }
 
 // Helper to run the demo auth
-export async function getOrCreateDemoUser() {
-  const existing = users.find((u) => u.username === "demo");
-
-  if (existing) {
-    return existing;
-  }
-
+export async function createDemoUser() {
   const passwordHash = await bcrypt.hash(crypto.randomUUID(), 10);
 
   const user = {

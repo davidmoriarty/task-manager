@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Footer from "./components/Footer";
@@ -6,36 +7,64 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 
 function App() {
+  const queryClient = useQueryClient();
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [username, setUsername] = useState(
+    localStorage.getItem("username") ?? "",
+  );
+  const [isDemoUser, setIsDemoUser] = useState(
+    localStorage.getItem("isDemoUser") === "true",
+  );
 
   function handleLogin() {
     setToken(localStorage.getItem("token"));
+    setUsername(localStorage.getItem("username") ?? "");
+    setIsDemoUser(localStorage.getItem("isDemoUser") === "true");
   }
 
   // logout helper (optional)
   function handleLogout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("isDemoUser");
+    queryClient.clear();
+
     setToken(null);
+    setUsername("");
+    setIsDemoUser(false);
   }
 
   return (
     <BrowserRouter>
-      {/* Header outside of Routes so it's always visible */}
-      <Header token={token} onLogout={handleLogout} />
+      <div className="min-h-screen flex flex-col">
+        {/* Header outside of Routes so it's always visible */}
+        <Header
+          token={token}
+          username={username}
+          isDemoUser={isDemoUser}
+          onLogout={handleLogout}
+        />
 
-      {/* Main content area */}
-      <main className="flex flex-col flex-1">
-        <Routes>
-          {/* Redirect root to login or home depending on auth */}
-          <Route
-            path="/"
-            element={token ? <Home /> : <Navigate to="/login" replace />}
-          />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        </Routes>
-      </main>
+        {/* Main content area */}
+        <main className="flex-1">
+          <Routes>
+            {/* Redirect root to login or home depending on auth */}
+            <Route
+              path="/"
+              element={
+                token ? (
+                  <Home isDemoUser={isDemoUser} />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          </Routes>
+        </main>
 
-      <Footer />
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 }

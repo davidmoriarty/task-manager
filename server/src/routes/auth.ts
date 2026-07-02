@@ -1,6 +1,7 @@
 import { Hono } from "hono";
-import { createUser, getOrCreateDemoUser, validateUser } from "../db";
+import { createDemoUser, createUser, validateUser } from "../db";
 import { signToken } from "../lib/jwt";
+import { seedDemoTasks } from "../tasks";
 
 export const auth = new Hono()
   .post("/signup", async (c) => {
@@ -24,16 +25,18 @@ export const auth = new Hono()
     if (!user) return c.json({ error: "Invalid credentials" }, 401);
 
     const token = signToken({ id: user.id });
-    return c.json({ token, username: user.username });
+    return c.json({ token, username: user.username, isDemoUser: false });
   })
 
   .post("/demo", async (c) => {
-    const user = await getOrCreateDemoUser();
+    const user = await createDemoUser();
+    seedDemoTasks(user.id);
 
     const token = signToken({ id: user.id });
 
     return c.json({
       token,
       username: user.username,
+      isDemoUser: true,
     });
   });
