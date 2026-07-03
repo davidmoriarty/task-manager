@@ -113,9 +113,9 @@ flowchart TD
 <h3>Mobile</h3>
 
 <p align="center">
-  <img src="./docs/screenshots/taskmanager-login-mobile.png" alt="Task Manager mobile login screen" width="220" />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="./docs/screenshots/taskmanager-tasklist-mobile.png" alt="Task Manager mobile task list screen" width="220" />
+  <img src="./docs/screenshots/taskmanager-login-mobile.png" alt="Task Manager mobile login screen" width="200" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="./docs/screenshots/taskmanager-tasklist-mobile.png" alt="Task Manager mobile task list screen" width="200" />
 </p>
 
 ## Tech Stack
