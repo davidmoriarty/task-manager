@@ -79,37 +79,41 @@ You should receive an empty array until tasks are created via the UI.
 
 Note: Data is stored in memory and resets on server restart. This is intentional for demo purposes.
 
-## Architecture (ASCII)
+## Architecture
 
-┌──────────────────────────────┐
-│ Browser                      │
-└──────────────┬───────────────┘
-               │ HTTPS
-               ▼
-┌──────────────────────────────┐
-│ task-manager.davidmoriarty.dev│
-│ (Cloudflare Pages)           │
-└──────────────┬───────────────┘
-               │ fetch()
-               ▼
-┌──────────────────────────────┐
-│ Fly.io                       │
-│ Hono API (Bun)               │
-└──────────────┬───────────────┘
+```mermaid
+flowchart TD
+    A[Browser]
+    B[Cloudflare Pages<br/>React + Vite]
+    C[Fly.io<br/>Hono API]
+    D[(In-memory Users)]
+    E[(In-memory Tasks)]
+
+    A -->|HTTPS| B
+    B -->|Authenticated API| C
+    C --> D
+    C --> E
+```
 
 ## Screenshots
 
-### Desktop
+<p>
+  Task Manager is fully responsive, with optimized layouts for desktop and mobile.
+</p>
 
-| Login | Task List |
-|-------|-----------|
-| ![Desktop Login](./docs/screenshots/login-desktop.png) | ![Desktop Task List](./docs/screenshots/tasklist-desktop.png) |
+<h3>Desktop</h3>
 
-### Mobile
+<p align="center">
+  <img src="./docs/screenshots/taskmanager-login-desktop.png" alt="Task Manager desktop login screen" width="49%" />
+  <img src="./docs/screenshots/taskmanager-tasklist-desktop.png" alt="Task Manager desktop task list screen" width="49%" />
+</p>
 
-| Login | Task List |
-|-------|-----------|
-| ![Mobile Login](./docs/screenshots/login-mobile.png) | ![Mobile Task List](./docs/screenshots/tasklist-mobile.png) |
+<h3>Mobile</h3>
+
+<p align="center">
+  <img src="./docs/screenshots/taskmanager-login-mobile.png" alt="Task Manager mobile login screen" width="240" />
+  <img src="./docs/screenshots/taskmanager-tasklist-mobile.png" alt="Task Manager mobile task list screen" width="240" />
+</p>
 
 ## Tech Stack
 
