@@ -99,8 +99,17 @@ Note: Data is stored in memory and resets on server restart. This is intentional
 
 ## Screenshots
 
-![Task Manager – Task List View](./docs/screenshots/taskmanager-tasklist.png)
-![Task Manager – Login View](./docs/screenshots/taskmanager-login.png)
+### Desktop
+
+| Login | Task List |
+|-------|-----------|
+| ![Desktop Login](./docs/screenshots/login-desktop.png) | ![Desktop Task List](./docs/screenshots/tasklist-desktop.png) |
+
+### Mobile
+
+| Login | Task List |
+|-------|-----------|
+| ![Mobile Login](./docs/screenshots/login-mobile.png) | ![Mobile Task List](./docs/screenshots/tasklist-mobile.png) |
 
 ## Tech Stack
 
