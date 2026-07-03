@@ -43,7 +43,7 @@ export default function Home({ isDemoUser }: { isDemoUser: boolean }) {
 
   return (
     <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center gap-y-3 p-4">
-      <div className="container mx-auto mb-4 pt-4 pb-8">
+      <div className="container mx-auto pt-3 pb-4">
         <h1 className="text-2xl lg:text-4xl text-center font-semibold lg:font-black leading-relaxed">
           Task List
         </h1>
@@ -54,7 +54,7 @@ export default function Home({ isDemoUser }: { isDemoUser: boolean }) {
 
       {isDemoUser && showDemoNotice && (
         <div
-          className="container mx-auto max-w-5xl rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 mb-10 text-amber-950 shadow-sm"
+          className="container mx-auto mb-4 max-w-5xl rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-amber-950 shadow-sm"
           role="note"
           aria-label="Demo mode notice"
         >
@@ -62,8 +62,8 @@ export default function Home({ isDemoUser }: { isDemoUser: boolean }) {
             <div className="text-sm">
               <p>
                 <strong>Demo mode:</strong> This is a temporary demo workspace.
+                Please don't enter sensitive information.
               </p>
-              <p>Please don't enter sensitive information.</p>
             </div>
 
             <button
@@ -91,7 +91,7 @@ export default function Home({ isDemoUser }: { isDemoUser: boolean }) {
       )}
 
       {/* Task input */}
-      <div className="w-full h-12 container mx-auto flex flex-col items-center justify-center gap-y-4 md:flex-row md:justify-between md:gap-x-4 px-4 mb-8">
+      <div className="container mx-auto mb-5 flex w-full flex-col items-center gap-y-3 px-4 md:h-12 md:flex-row md:justify-between md:gap-x-4">
         <label htmlFor="task-input" className="sr-only">
           New Task
         </label>
@@ -101,10 +101,11 @@ export default function Home({ isDemoUser }: { isDemoUser: boolean }) {
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
           placeholder="Add a new task"
-          className="w-full h-full border py-4 px-4 rounded border-slate-400"
+          className="h-11 w-full rounded-md border border-border bg-background px-4 text-foreground placeholder:text-muted-foreground"
         />
         <Button
-          className="w-full md:w-[30%] h-full bg-sky-600 hover:bg-sky-500 transition-colors duration-150"
+          variant="blue"
+          className="h-11 w-full md:w-[30%]"
           onClick={() => {
             if (newTitle.trim() === "") {
               setInputError("Task title cannot be empty");
@@ -132,24 +133,28 @@ export default function Home({ isDemoUser }: { isDemoUser: boolean }) {
             {tasks?.map((task) => (
               <li
                 key={task.id}
-                className={`p-3 mb-3 rounded-md border flex justify-between items-center transition-colors duration-150 ${
+                className={`mb-3 rounded-md border p-4 transition-colors duration-150 ${
                   task.completed
-                    ? "line-through bg-slate-200 dark:bg-slate-600 text-slate-500"
-                    : "bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
+                    ? "bg-slate-200 text-slate-500 line-through dark:bg-slate-600"
+                    : "bg-white hover:bg-slate-50 dark:bg-slate-800  dark:hover:bg-slate-700"
                 }`}
               >
-                <span>{task.title}</span>
-                <div className="flex gap-2">
+                <span className="block text-lg leading-snug">{task.title}</span>
+
+                <div className="mt-4 flex gap-2">
                   <Button
                     size="sm"
-                    variant="secondary"
+                    variant={task.completed ? "secondary" : "green"}
+                    className="flex-1 md:flex-none md:w-24"
                     onClick={() => toggleTaskMutation.mutate(task.id)}
                   >
-                    Toggle
+                    {task.completed ? "Reopen" : "Complete"}
                   </Button>
+
                   <Button
                     size="sm"
                     variant="destructive"
+                    className="flex-1 md:flex-none md:w-24"
                     onClick={() => {
                       if (
                         window.confirm(

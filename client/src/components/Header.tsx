@@ -1,5 +1,6 @@
 // client/src/components/Header.tsx
 import { useNavigate } from "react-router";
+import { Button } from "@/components/ui/button";
 
 type HeaderProps = {
   token: string | null;
@@ -30,22 +31,14 @@ export default function Header({
             <>
               <span>{isDemoUser ? "Demo User" : username}</span>
 
-              <button
-                type="button"
-                onClick={onLogout}
-                className="bg-red-600 hover:bg-red-500 text-white px-4 py-1 rounded"
-              >
+              <Button type="button" variant="destructive" onClick={onLogout}>
                 Logout
-              </button>
+              </Button>
             </>
           ) : (
-            <button
-              type="button"
-              onClick={() => navigate("/login")}
-              className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded"
-            >
+            <Button type="button" onClick={() => navigate("/login")}>
               Login
-            </button>
+            </Button>
           )}
         </nav>
       </div>
