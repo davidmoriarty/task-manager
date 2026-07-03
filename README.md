@@ -105,14 +105,18 @@ flowchart TD
 
 <p align="center">
   <img src="./docs/screenshots/taskmanager-login-desktop.png" alt="Task Manager desktop login screen" width="49%" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="./docs/screenshots/taskmanager-tasklist-desktop.png" alt="Task Manager desktop task list screen" width="49%" />
 </p>
 
+<br>
+  
 <h3>Mobile</h3>
 
 <p align="center">
-  <img src="./docs/screenshots/taskmanager-login-mobile.png" alt="Task Manager mobile login screen" width="240" />
-  <img src="./docs/screenshots/taskmanager-tasklist-mobile.png" alt="Task Manager mobile task list screen" width="240" />
+  <img src="./docs/screenshots/taskmanager-login-mobile.png" alt="Task Manager mobile login screen" width="220" />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="./docs/screenshots/taskmanager-tasklist-mobile.png" alt="Task Manager mobile task list screen" width="220" />
 </p>
 
 ## Tech Stack
