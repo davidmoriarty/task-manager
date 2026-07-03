@@ -105,7 +105,6 @@ flowchart TD
 
 <p align="center">
   <img src="./docs/screenshots/taskmanager-login-desktop.png" alt="Task Manager desktop login screen" width="49%" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="./docs/screenshots/taskmanager-tasklist-desktop.png" alt="Task Manager desktop task list screen" width="49%" />
 </p>
 
