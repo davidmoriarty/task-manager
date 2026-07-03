@@ -36,7 +36,11 @@ export default function Header({
               </Button>
             </>
           ) : (
-            <Button type="button" onClick={() => navigate("/login")}>
+            <Button
+              type="button"
+              variant="blue"
+              onClick={() => navigate("/login")}
+            >
               Login
             </Button>
           )}

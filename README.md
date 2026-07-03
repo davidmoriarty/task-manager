@@ -4,8 +4,8 @@ A full-stack task management application built with Bun, Hono, React, and shared
 
 This project focuses on end-to-end application architecture using the BHVR stack, emphasizing shared types, clean API boundaries, authentication flows, and pragmatic UI state management.
 
-**Live demo:** https://task-manager-client.pages.dev  
-*(Stateless demo — see **Quick Demo (2 minutes)** below to create a user)*
+**Live demo:** https://task-manager.davidmoriarty.dev
+The application includes a built-in **Demo Mode**, allowing visitors to explore the app immediately without creating an account.
 
 ## Why this project
 
@@ -19,22 +19,31 @@ This project exists to demonstrate:
 
 To support this goal, the application is intentionally implemented with specific architectural constraints.
 
-## Stateless Demo Mode
+## Features
 
-This project is intentionally implemented as a **stateless demo API**.
+- Secure JWT authentication
+- Instant Demo Mode (no signup required)
+- Create, complete, reopen, and delete tasks
+- Responsive mobile-first interface
+- Light and dark mode
+- Shared TypeScript types across client and server
+- End-to-end type-safe API
+- CI with GitHub Actions
+- Independent Cloudflare Pages + Fly.io deployment
 
-- User accounts and tasks are stored **in memory** on the server.
-- All data resets on server restart or redeploy.
-- JWTs are used for authentication with expiration, issuer, and audience validation.
-- The goal is to demonstrate **API design, shared types, and auth flows**, not persistence.
+## Demo Mode
 
-A database-backed version of this architecture is intentionally deferred and explored separately.
+Task Manager supports two ways to explore the application:
 
-Because there is no signup UI in demo mode, see **Quick Demo (2 minutes)** below to create a user and try the app.
+- **Demo Mode** — Click **Try Demo** on the login page to launch a temporary workspace populated with sample tasks. This workspace resets each time a new demo session is started and should not be used for sensitive information.
 
-## Quick Demo (2 minutes)
+- **Personal Account** — Create your own account using the signup API (described below) and log in with your own credentials. User accounts and tasks are stored in memory and will reset whenever the server restarts or is redeployed.
 
-This app uses JWT authentication. There is intentionally no signup UI in demo mode, so a demo user is created via `curl`.
+Internally, the backend stores users and tasks in memory. This keeps the project focused on API design, shared types, and authentication flows rather than persistence. A database-backed implementation is intentionally left as a future enhancement.
+
+## API Signup Example (2 minutes)
+
+If you'd like to use your own account instead of the built-in Demo Mode, you can create one directly through the API:
 
 ### 1. Create a user
 ```bash
@@ -62,46 +71,31 @@ curl -H "Authorization: Bearer <TOKEN>" \
 You should receive an empty array until tasks are created via the UI.
 
 ### 3. Use the app
-- Visit: https://task-manager-client.pages.dev
+- Visit: https://task-manager.davidmoriarty.dev
 - Log in with:
   - Username: demo
   - Password: test1234
-- Create, toggle, and delete tasks
+- Create, complete, reopen, and delete tasks
 
 Note: Data is stored in memory and resets on server restart. This is intentional for demo purposes.
 
 ## Architecture (ASCII)
 
-```text
-┌──────────────────────────┐
-│        Browser            │
-└───────────┬──────────────┘
-│ HTTPS
-▼
-┌──────────────────────────┐
-│ Cloudflare Pages          │
-│ Static React (Vite build) │
-└───────────┬──────────────┘
-│ fetch() + Authorization: Bearer 
-▼
-┌──────────────────────────┐
-│ Fly.io                    │
-│ Hono API (Bun runtime)    │
-│                           │
-│  /auth/signup  /auth/login│
-│  /tasks  /tasks/:id/toggle│
-│                           │
-│  JWT middleware verifies  │
-│  token and sets userId    │
-└───────┬─────────┬────────┘
-│         │
-│         │
-▼         ▼
-┌──────────┐  ┌──────────┐
-│ users[]   │  │ tasks[]   │
-│ (memory)  │  │ (memory)  │
-└──────────┘  └──────────┘
-```
+┌──────────────────────────────┐
+│ Browser                      │
+└──────────────┬───────────────┘
+               │ HTTPS
+               ▼
+┌──────────────────────────────┐
+│ task-manager.davidmoriarty.dev│
+│ (Cloudflare Pages)           │
+└──────────────┬───────────────┘
+               │ fetch()
+               ▼
+┌──────────────────────────────┐
+│ Fly.io                       │
+│ Hono API (Bun)               │
+└──────────────┬───────────────┘
 
 ## Screenshots
 
@@ -120,7 +114,15 @@ This app follows the BHVR stack approach, providing a lightweight full-stack mon
 
 ## Status
 
-Core functionality is complete and stable.
+Current release includes:
+
+- JWT authentication
+- Built-in Demo Mode
+- Responsive desktop and mobile UI
+- Light and dark themes
+- Shared TypeScript models
+- GitHub Actions continuous integration
+- Independent frontend/backend deployment
 
 Planned follow-ups include:
 - Database-backed persistence
@@ -129,11 +131,9 @@ Planned follow-ups include:
 
 ## Deployment Notes
 
-The backend API is deployed for demonstration purposes.
+The frontend is deployed on Cloudflare Pages and the backend API is deployed on Fly.io.
 
-- The deployed API is **stateless** and may reset at any time.
-- It is not intended for persistent user data or production workloads.
-- Health and availability are monitored, but durability is not guaranteed.
+The backend intentionally stores all data in memory. User accounts and tasks reset whenever the server restarts or is redeployed. This deployment exists to demonstrate the application's architecture rather than provide durable storage.
 
 ## Limitations & Design Notes
 
@@ -162,7 +162,7 @@ These constraints are deliberate to keep the focus on **type sharing, API bounda
 If this application were being prepared for production use, I would make the following changes:
 
 - **Authentication**
-  - Replace the demo token flow with secure, hashed credentials and refresh-token rotation.
+  - Replace localStorage-based JWT storage with secure HttpOnly cookies and refresh-token rotation.
   - Store auth tokens in HttpOnly cookies instead of localStorage.
   - Add proper error handling, rate limiting, and account lockout protections.
 
