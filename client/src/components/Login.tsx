@@ -50,6 +50,7 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
             type="text"
             placeholder="Username"
             value={username}
+            autoComplete="username"
             onChange={(e) => setUsername(e.target.value)}
             className="h-9 w-full rounded-md border border-border px-3 text-foreground placeholder:text-muted-foreground"
           />
@@ -64,6 +65,7 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
             type="password"
             placeholder="Password"
             value={password}
+            autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
             className="h-9 w-full rounded-md border border-border px-3 text-foreground placeholder:text-muted-foreground"
           />
