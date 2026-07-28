@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://task-manager.davidmoriarty.dev/sitemap.xml
