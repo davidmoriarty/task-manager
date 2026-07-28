@@ -5,11 +5,13 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": [
+        "$TURBO_DEFAULTS",
         "src/**/*.ts",
         "src/**/*.tsx",
         "src/**/*.js",
         "src/**/*.jsx",
         "src/**/*.json",
+        "public/**",
         "tsconfig.json",
         "tsconfig.*.json",
         "vite.config.ts",
