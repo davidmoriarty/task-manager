@@ -1,10 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
-import Home from "./components/Home";
-import Login from "./components/Login";
+
+const Home = lazy(() => import("./components/Home"));
+const Login = lazy(() => import("./components/Login"));
 
 function App() {
   const queryClient = useQueryClient();
@@ -47,20 +48,32 @@ function App() {
 
         {/* Main content area */}
         <main className="flex-1">
-          <Routes>
-            {/* Redirect root to login or home depending on auth */}
-            <Route
-              path="/"
-              element={
-                token ? (
-                  <Home isDemoUser={isDemoUser} />
-                ) : (
-                  <Navigate to="/login" replace />
-                )
-              }
-            />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          </Routes>
+          <Suspense
+            fallback={
+              <p className="p-4 text-center text-muted-foreground">
+                Loading...
+              </p>
+            }
+          >
+            <Routes>
+              {/* Redirect root to login or home depending on auth */}
+              <Route
+                path="/"
+                element={
+                  token ? (
+                    <Home isDemoUser={isDemoUser} />
+                  ) : (
+                    <Navigate to="/login" replace />
+                  )
+                }
+              />
+
+              <Route
+                path="/login"
+                element={<Login onLogin={handleLogin} />}
+              />
+            </Routes>
+          </Suspense>
         </main>
 
         <Footer />
