@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 
 const Home = lazy(() => import("./components/Home"));
-const Login = lazy(() => import("./components/Login"));
+import Login from "./components/Login";
 
 function App() {
   const queryClient = useQueryClient();
