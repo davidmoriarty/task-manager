@@ -6,7 +6,7 @@
     "moduleDetection": "force",
     "jsx": "react-jsx",
 
-    "types": ["bun-types"],
+    "types": ["bun"],
 
     "baseUrl": "./",
     "paths": {
